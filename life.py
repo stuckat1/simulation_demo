@@ -1,4 +1,5 @@
 import sys
+import random
 from terminal import *
 
 def main():
@@ -63,37 +64,29 @@ def read_initial_conf(grid):
     It takes an already defined grid and modifies it according to user input.
     (It shouldn't let invalid input leak)
     """
-    done = False
-    prompt = 'CONFIG %d: Type coordinates to toggle (or start to finish) %s: '
-    config_step = 0
-    last_coord = ''
-    while True:
-        # While input isn't valid, try reading and parsing it
-        coord = []
-        sys.stdout.write(prompt % (config_step, last_coord))
-        while coord == []:
-            # Read user's command
-            cmd = raw_input()
-            # Break if user is finished
-            if cmd == 'start' or cmd == '':
-                done = True
-                break
-            try:
-                cmd = cmd.split()
-                coord = [int(cmd[i]) for i in range(2)]
-            except:
-                sys.stdout.write(bcolors.RED + '[Invalid input] %s' %
-                                 (prompt % (config_step, last_coord)) 
-                                 + bcolors.ENDC)
-            last_coord = str(coord)
-            config_step += 1
-        # Total break if user is finished
-        if done:
-            break
-        # Update grid (it actually toggles the grid position provided)
-        grid [coord[1]][coord[0]] = (grid[coord[1]][coord[0]] + 1) % 2
-        update_screen(grid)
+    prompt = 'Enter the number of random items to start with: '
 
+    x_max = len(grid[0])
+    y_max = len(grid)
+
+    sys.stdout.write(prompt)
+
+    cmd = raw_input()
+
+    for i in range(int(cmd)):
+
+        # Update grid
+        #
+        while True:
+            x = random.randint(0,x_max-1)
+            y = random.randint(0,y_max-1)
+
+            if grid[y][x] == 0:
+                grid[y][x] = 1
+                break
+
+    update_screen(grid)
+	
 def next_step(grid, new_grid):
     """ next_step: Computes the grid's next step and stores it in the list
     new_grid. The latter needing to have been previously defined.
